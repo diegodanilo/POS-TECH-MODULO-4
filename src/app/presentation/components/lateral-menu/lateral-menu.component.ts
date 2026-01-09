@@ -18,8 +18,8 @@ export class LateralMenuComponent {
     async onMenuClick(item: IMenu) {
     if (item.label === 'Logoff') {
       console.log('Logging out...');
-      await this.auth.logout();   // encerra sessão no Firebase
-      this.router.navigate(['/login']); // redireciona
+      await this.auth.logout();   
+      this.router.navigate(['/login']); 
     } else if (item.path) {
       this.router.navigate([item.path]);
     }
