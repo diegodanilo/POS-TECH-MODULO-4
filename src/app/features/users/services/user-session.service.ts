@@ -16,7 +16,7 @@ export class UserSessionService {
     this.userProfile$ = this.authService.user$.pipe(
       switchMap(user => {
         if (!user) return of(null);
-        return this.usersService.getUserByUid$(user.user.uid);
+        return this.usersService.getUserByUid$(user.uid);
       })
     );
   }

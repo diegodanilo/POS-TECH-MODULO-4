@@ -17,7 +17,7 @@ import { AuthService } from './core/auth/auth.service';
   standalone: true,
   imports: [NzLayoutModule, RouterModule]
 })
-export class ContentWrapperComponent {}
+export class ContentWrapperComponent { }
 
 @Component({
   selector: 'app-root',
@@ -36,25 +36,13 @@ export class AppComponent implements OnInit {
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) {
-      this.isAuthPage = ['/login', '/signup', '/forgot-password'].includes(event.urlAfterRedirects);
-    }
-  });
-
-    this.getUserData();
+      if (event instanceof NavigationEnd) {
+        this.isAuthPage = ['/login', '/signup', '/forgot-password'].includes(event.urlAfterRedirects);
+      }
+    });
   }
-
-  title = 'projeto';
-
   ngOnInit(): void {
     this.screenType = checkScreenSize(window.innerWidth);
   }
 
-  private getUserData(): void {
-    // this.userService.getUser().subscribe((element) => {
-    //   this.userData = element;
-    //   this.userHandler = new UserDataHandler(this.userData);
-    //   this.userHandler.storeData();
-    // })
-  }
 }

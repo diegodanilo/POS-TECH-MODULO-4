@@ -7,94 +7,101 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  serverTimestamp,
+  query,
+  where,
+  serverTimestamp
 } from '@angular/fire/firestore';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of, switchMap } from 'rxjs';
 import { ITransaction } from 'src/app/domain/model/transaction-interface';
+import { AuthService } from 'src/app/core/auth/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TransactionsService {
 
-  private readonly collectionRef;
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService
+  ) {}
 
-  constructor(private firestore: Firestore) {
-    this.collectionRef = collection(this.firestore, 'transactions');
-  }
-
+  /** 🔹 BUSCA SOMENTE TRANSAÇÕES DO USUÁRIO LOGADO */
   getTransactions$(): Observable<ITransaction[]> {
+    return this.authService.user$.pipe(
+      switchMap(user => {
+        if (!user) return of([]);
+
+        const ref = query(
+          collection(this.firestore, 'transactions'),
+          where('userId', '==', user.uid)
+        );
+        return collectionData(ref, { idField: 'id' }) as Observable<ITransaction[]>;
+      })
+    );
+  }
+
+  /** 🔹 CREATE */
+  addTransaction(data: ITransaction): Promise<void> {
+    const user = this.authService.currentUser;
+
+    if (!user) {
+      throw new Error('Usuário não autenticado');
+    }
+
     const ref = collection(this.firestore, 'transactions');
-    return collectionData(ref, { idField: 'id' }) as Observable<ITransaction[]>;
-  }
 
-  addTransaction(data: ITransaction): Promise<any> {
-    const now = new Date();
-    const formattedDate = now.toISOString().split('T')[0];
-    console.log('Formatted Date:', formattedDate);
-
-    return addDoc(this.collectionRef, {
+    return addDoc(ref, {
       ...data,
-      createdAt: formattedDate
-    });
+      userId: user.uid,
+      createdAt: serverTimestamp()
+    }).then(() => undefined);
   }
 
-  /** 🔹 Update */
+  /** 🔹 UPDATE */
   updateTransaction(id: string, data: Partial<ITransaction>): Promise<void> {
     const ref = doc(this.firestore, `transactions/${id}`);
     return updateDoc(ref, data);
   }
 
-  /** 🔹 Delete */
+  /** 🔹 DELETE */
   deleteTransaction(id: string): Promise<void> {
     const ref = doc(this.firestore, `transactions/${id}`);
     return deleteDoc(ref);
   }
 
+  /** 🔹 TOTAL */
   getTotalBalance$(): Observable<number> {
     return this.getTransactions$().pipe(
       map(transactions =>
         transactions.reduce((total, transaction) => {
-          const transactionTotal = transaction.categoria?.reduce(
-            (sum, item) => sum + (item.amount || 0),
-            0
-          ) ?? 0;
-
-          return total + transactionTotal;
+          const sum =
+            transaction.categoria?.reduce(
+              (acc, item) => acc + (item.amount || 0),
+              0
+            ) ?? 0;
+          return total + sum;
         }, 0)
       )
     );
   }
 
-  /** 🔹 Soma por mês */
+  /** 🔹 POR MÊS */
   getMonthlyExpenses$(): Observable<{ month: string; total: number }[]> {
     return this.getTransactions$().pipe(
       map(transactions => {
-        const grouped: { [month: string]: number } = {};
+        const grouped: Record<string, number> = {};
+
         transactions.forEach(t => {
-          const date = (t.id as any)?.toDate?.() ?? new Date();
-          const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
-          const total = t.categoria?.reduce((sum, item) => sum + (item.amount || 0), 0) ?? 0;
-          grouped[monthKey] = (grouped[monthKey] || 0) + total;
+          const month = t.month;
+          const total =
+            t.categoria?.reduce((sum, item) => sum + (item.amount || 0), 0) ?? 0;
+
+          grouped[month] = (grouped[month] || 0) + total;
         });
+
         return Object.entries(grouped).map(([month, total]) => ({ month, total }));
       })
     );
   }
+ }
 
-  /** 🔹 Soma por ano */
-  getYearlyExpenses$(): Observable<{ year: string; total: number }[]> {
-    return this.getTransactions$().pipe(
-      map(transactions => {
-        const grouped: { [year: string]: number } = {};
-        transactions.forEach(t => {
-          const date = (t.id as any)?.toDate?.() ?? new Date();
-          const yearKey = `${date.getFullYear()}`;
-          const total = t.categoria?.reduce((sum, item) => sum + (item.amount || 0), 0) ?? 0;
-          grouped[yearKey] = (grouped[yearKey] || 0) + total;
-        });
-        return Object.entries(grouped).map(([year, total]) => ({ year, total }));
-      })
-    );
-  }
-}
+
+

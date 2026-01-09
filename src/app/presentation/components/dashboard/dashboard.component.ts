@@ -17,8 +17,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.totalBalance = this.transactionsService.getTotalBalance$();
-    // this.income = this.transactionsService.getIncome$();
-    // this.expenses = this.transactionsService.getExpenses$();
   }
 
   openDashboard() {
