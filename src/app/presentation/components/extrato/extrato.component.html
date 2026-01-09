@@ -1,0 +1,113 @@
+<section class="container">
+  <form class="filters-container" *ngIf="filters$ | async as filters"
+    (submit)="onApplyFilters(); $event.preventDefault()">
+    <div class="filters-row">
+      <div style="width: 100%;">
+
+        <!-- FILTRO DATA -->
+        <div class="filter-group">
+          <label for="filterDate">Data</label>
+          <input id="filterDate" type="date" [ngModel]="filters.date" (ngModelChange)="updateFilters({ date: $event })"
+            [ngModelOptions]="{ standalone: true }" />
+        </div>
+
+        <!-- FILTRO TIPO -->
+        <div class="filter-group">
+          <label for="filterType">Tipo</label>
+          <div class="filter-group-button">
+            <nz-select style="width: 178px" [ngModel]="filters.type" (ngModelChange)="updateFilters({ type: $event })"
+              [ngModelOptions]="{ standalone: true }">
+              <nz-option nzValue="" nzLabel="Todos"></nz-option>
+              <nz-option nzValue="emprestimo" nzLabel="Depósito"></nz-option>
+              <nz-option nzValue="transfer" nzLabel="Transferência"></nz-option>
+              <nz-option nzValue="docted" nzLabel="DOC/TED"></nz-option>
+            </nz-select>
+
+            <div class="btn-section">
+              <button nz-button type="button" nzType="default" nzShape="circle" (click)="clearFilters()">
+                <span nz-icon nzType="close"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+  <div class="header">
+    <div class="title">
+      <h2>Extrato</h2>
+    </div>
+  </div>
+  <div *ngIf="mensagemErro" class="alert alert-danger">
+    {{ mensagemErro }}
+  </div>
+
+  <div class="scroll-container">
+    <ng-container *ngIf="((filteredTransactions$ | async) ?? []).length > 0; else noResults">
+      <div *ngFor="let transaction of (filteredTransactions$ | async)">
+        <div class="row description">
+          <div class="col-sm-12" *ngIf="transaction.categoria.length > 0">
+            <h3 class="transaction-date">{{ transaction.month | titlecase }} </h3>
+          </div>
+        </div>
+        <div *ngFor="let item of transaction.categoria; trackBy: trackByCategoriaId">
+          <div class="row description">
+            <div class="col-sm-12">
+              <h5 class="transaction-description text">{{ item.description }}</h5>
+              <p class="transaction-amount value">
+                {{ formatCurrencyBRL(item.amount) }}
+              </p>
+            </div>
+            <div class="col-sm-8">
+              <div class="aline-button">
+                <div>
+                  <button class="btn btn-outline-warning btn-sm me-1 button"
+                    (click)="openEditModal(transaction.id, item, transaction.month)">
+                    <span nz-icon nzType="edit" nzTheme="outline"></span></button>
+                </div>
+                <div>
+                  <button class="btn btn-outline-danger btn-sm button margem"
+                    (click)="deleteCategoria(transaction.id, item.id)">
+                    <span nz-icon nzType="delete" nzTheme="outline"></span></button>
+                </div>
+              </div>
+              <p class="date">{{ formatDateBR(item.date ? item.date.toString() : '') }}</p>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="line"></div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>
+<ng-template #noResults>
+  <div class="no-results">
+    <p>Nenhuma transação encontrada com os filtros aplicados.</p>
+  </div>
+</ng-template>
+<div class="modal fade show d-block custom-modal-bg" tabindex="-1" role="dialog" *ngIf="showEditModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form [formGroup]="editForm" (ngSubmit)="saveEdit()" class="modal-content">
+        <h2>Editar Transação</h2>
+        <input formControlName="description" type="text" placeholder="Descrição" />
+        <select formControlName="type">
+          <option value="income">Depósito</option>
+          <option value="expense">Despesa</option>
+          <option value="transfer">Transferência</option>
+        </select>
+        <input formControlName="amount" type="number" placeholder="Valor" />
+        <input formControlName="date" type="date" />
+        <input formControlName="month" placeholder="Mês (ex: Maio)" />
+        <div class="modal-actions">
+          <button type="submit" [disabled]="editForm.invalid">Salvar</button>
+          <button type="button" (click)="closeEditModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

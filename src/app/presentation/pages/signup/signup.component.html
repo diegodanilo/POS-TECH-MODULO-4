@@ -1,0 +1,71 @@
+<div class="container">
+  <div class="card animate-in">
+    <div class="header">
+      <h1>Crie sua conta ✨</h1>
+      <p class="subtitle">Preencha os campos abaixo para se cadastrar</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="name">Nome completo</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Seu nome"
+        />
+        <small class="error" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+          Informe seu nome
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="m@example.com"
+        />
+        <small class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+          Informe um e-mail válido
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="A senha precisa ter mais de 6 caracteres"
+        />
+        <small class="error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          A senha deve ter pelo menos 6 caracteres
+        </small>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loading || form.invalid"
+      >
+        <span *ngIf="!loading">Cadastrar</span>
+        <span *ngIf="loading" class="loader">
+          <span class="spinner"></span>
+          Criando conta...
+        </span>
+      </button>
+
+      <p class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+    </form>
+
+    <div class="links">
+      <a routerLink="/login">
+        Já tem conta? <strong>Entrar</strong>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+.topNavbar {
+    height: 96px;
+    width: 100vw;
+    background-color: #004D61;
+    // color: #FFFFFF;
+    margin: 0px 0px 0px -50px;
+}
+
+.topNavbar div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.userName {
+    margin: 0em 2em 0em 2em;
+    color: #FFFFFF;
+}
+ 
+@media screen and (max-width: 1400px) {
+    .topNavbar {
+        padding-right: 16px !important;
+    }
+}

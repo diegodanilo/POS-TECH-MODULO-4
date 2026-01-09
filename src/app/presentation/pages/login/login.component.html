@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="card animate-in">
+
+    <div class="header">
+      <h1>Bem-vindo 👋</h1>
+      <p class="subtitle">Entre para continuar</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="m@example.com"
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="********"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loading || form.invalid"
+      >
+        <span *ngIf="!loading">Entrar</span>
+
+        <span *ngIf="loading" class="loader">
+          <span class="spinner"></span>
+          Entrando...
+        </span>
+      </button>
+
+      <p class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+    </form>
+
+    <div class="links">
+      <a routerLink="/signup">
+        Não tem conta? <strong>Cadastre-se</strong>
+      </a>
+
+      <a routerLink="/forgot-password" class="secondary">
+        Esqueci minha senha
+      </a>
+    </div>
+  </div>
+</div>

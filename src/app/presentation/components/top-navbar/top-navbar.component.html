@@ -1,0 +1,9 @@
+<div>
+    <div class="topNavbar">
+        <div class="container" style="height: 100%;">
+            <span *ngIf="user$ | async as user" class="userName">{{ user.name }}</span>
+            <nz-avatar [nzSize]="44" nzIcon="user"></nz-avatar>
+        </div>
+    </div>
+</div>
+

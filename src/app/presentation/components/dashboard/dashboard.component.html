@@ -1,0 +1,7 @@
+<div class="dashboard">
+  <button nz-button nzType="default" nzDanger (click)="closeDashboard()" class="close-btn">✖ Fechar</button>
+      <h2>Resumo da Conta</h2>
+      <p>💰 Total: {{ totalBalance | async }}</p>
+      <p>📈 Entradas: {{ income | async }}</p>
+      <p>📉 Saídas: {{ expenses | async }}</p>
+    </div>

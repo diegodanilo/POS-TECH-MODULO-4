@@ -1,0 +1,33 @@
+<section class="container">
+</section>
+ <nz-layout>
+    <nz-header *ngIf="!isAuthPage">
+     <app-top-navbar></app-top-navbar>
+    </nz-header>
+    <div class="pageContent">
+        <div [ngSwitch]="screenType">
+            <div *ngSwitchCase="'desktop'" class="container">
+                <nz-layout>
+                    <nz-sider style="background-color: #e4ede3;">
+                        <div *ngIf="!isAuthPage">
+                            <app-lateral-menu></app-lateral-menu>
+                        </div>
+                    </nz-sider>
+                    <app-component-wrapper style="width: 100%; background-color: #e4ede3;"></app-component-wrapper>
+                </nz-layout>
+            </div>
+            <nz-layout *ngSwitchCase="'tablet'">
+                <nz-header *ngIf="!isAuthPage">
+                    <app-navbar [screenType]="screenType"></app-navbar>
+                </nz-header>
+                <app-component-wrapper style="background-color: #e4ede3;"></app-component-wrapper>
+            </nz-layout>
+            <nz-layout *ngSwitchCase="'mobile'">
+                <nz-content *ngIf="!isAuthPage">
+                    <app-navbar [screenType]="screenType"></app-navbar>
+                </nz-content>
+                <app-component-wrapper style="background-color: #e4ede3;"></app-component-wrapper>
+            </nz-layout>
+        </div>
+    </div>
+</nz-layout>
