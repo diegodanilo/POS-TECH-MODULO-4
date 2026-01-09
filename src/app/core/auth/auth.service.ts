@@ -53,7 +53,6 @@ export class AuthService {
     this.userSubject.next(null);
     this.isAuthenticatedSubject.next(false);
     console.log('AuthService :: logout - usuário deslogado com sucesso');
-    this.router.navigate(['/login']);
   }
 
   async signUp(email: string, password: string): Promise<void> {

@@ -10,8 +10,7 @@
     nz-menu-item
     *ngFor="let item of menuItems"
     [nzMatchRouter]="true"
-    (click)="onMenuClick(item)"
-  >
+    (click)="onMenuClick(item)">
     <span>{{ item.label }}</span>
   </li>
 </ul>

@@ -1,15 +1,28 @@
 .lateralMenu {
-    min-height: calc(100vh - 96px);
-    background-color: #F5F5F5;
+    max-height: calc(100vh - 96px);
+    background-color: #E4EDE3;
     border-radius: 8px;
     margin-top: 16px;
 }
 
-ul li {
-    text-align: center;
+
+.botao {
+    border-color: #47A138;
 }
 
 :host::ng-deep .ant-menu-item-selected {
     background-color: transparent !important;
     color: #47A138 !important
+}
+
+:host::ng-deep .ant-menu-item:hover{
+    color: #FF5031 !important
+}
+
+ul li {
+   text-align: start;
+   padding-top: 6px;
+   color: #000000;
+   font-weight: 600;
+
 }
