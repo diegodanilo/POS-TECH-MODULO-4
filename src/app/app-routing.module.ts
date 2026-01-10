@@ -11,21 +11,19 @@ const routes: Routes = [
     path: 'home-page',
     loadChildren: () =>
       import('./presentation/components/home/home-page.module').then(m => m.HomePageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./presentation/components/dashboard/dashboard.module')
+        .then(m => m.DashboardModule)
   },
   { path: 'login', component: LoginComponent },
-
- 
-  // {
-  //   path: 'home-page',
-  //   loadChildren: () =>
-  //     import('./presentation/components/home/home-page.module').then(m => m.HomePageModule),
-  //   canActivate: [AuthGuard]
-  // },
-  // { path: 'login', component: LoginComponent },
-  // { path: 'signup', component: SignupComponent },
-  // { path: 'forgot-password', component: ForgotPasswordComponent },
-  // { path: '', redirectTo: '/login', pathMatch: 'full' },
-  // { path: '**', redirectTo: '/login' }
+  { path: 'signup', component: SignupComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];
 
 

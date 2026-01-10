@@ -18,6 +18,10 @@ export const menuItems: IMenu[] = [
         path: '/other-services'
     },
     {
-        label: 'Logoff',
+        label: 'Dashboard',
+        path: '/dashboard'
     },
+    {
+        label: 'Logoff',
+    } 
 ]

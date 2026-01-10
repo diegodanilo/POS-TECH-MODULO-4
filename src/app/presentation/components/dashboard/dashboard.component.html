@@ -1,7 +1,35 @@
-<div class="dashboard">
-  <button nz-button nzType="default" nzDanger (click)="closeDashboard()" class="close-btn">✖ Fechar</button>
-      <h2>Resumo da Conta</h2>
-      <p>💰 Total: {{ totalBalance | async }}</p>
-      <p>📈 Entradas: {{ income | async }}</p>
-      <p>📉 Saídas: {{ expenses | async }}</p>
+<section class="dashboard">
+  <header class="dashboard-header">
+    <h2>Dashboard</h2>
+
+    <button class="close-btn" (click)="close()">
+      ✕
+    </button>
+  </header>
+
+  <h2>Resumo Financeiro</h2>
+
+  <div class="cards">
+    <div class="card">
+      <span>Saldo</span>
+      <strong>{{ totalBalance$ | async | currency:'BRL' }}</strong>
     </div>
+
+    <div class="card income">
+      <span>Receitas</span>
+      <strong>{{ totalIncome$ | async | currency:'BRL' }}</strong>
+    </div>
+
+    <div class="card expense">
+      <span>Despesas</span>
+      <strong>{{ totalExpense$ | async | currency:'BRL' }}</strong>
+    </div>
+  </div>
+
+ <ng-container *ngIf="totalExpense$ | async as totalExpense">
+  <div class="alert" *ngIf="totalExpense > 3000">
+    ⚠️ Atenção: seus gastos passaram de R$ 3.000 este mês
+  </div>
+</ng-container>
+
+</section>

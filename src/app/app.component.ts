@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
   private userData!: IUser;
   private userHandler?: UserDataHandler;
   isAuthPage: boolean = false
+  isMenuOpen = false;
 
 
   constructor(private router: Router) {
@@ -43,6 +44,13 @@ export class AppComponent implements OnInit {
   }
   ngOnInit(): void {
     this.screenType = checkScreenSize(window.innerWidth);
+  }
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
   }
 
 }

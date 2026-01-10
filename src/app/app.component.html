@@ -9,7 +9,7 @@
             <div *ngSwitchCase="'desktop'" class="container">
                 <nz-layout>
                     <nz-sider style="background-color: #e4ede3;">
-                        <div *ngIf="!isAuthPage">
+                        <div *ngIf="!isAuthPage" (click)="toggleMenu()">
                             <app-lateral-menu></app-lateral-menu>
                         </div>
                     </nz-sider>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { menuItems } from 'src/app/domain/constants/menu-items';
@@ -11,10 +11,10 @@ import { IMenu } from 'src/app/domain/model/menu-interface';
 })
 export class LateralMenuComponent {
   public menuItems = menuItems;
+  @Output() closeMenu = new EventEmitter<void>();
   
 
   constructor(private auth: AuthService, private router: Router) {}
-
     async onMenuClick(item: IMenu) {
     if (item.label === 'Logoff') {
       console.log('Logging out...');
@@ -23,6 +23,7 @@ export class LateralMenuComponent {
     } else if (item.path) {
       this.router.navigate([item.path]);
     }
+     this.closeMenu.emit();
   }
 
 }
