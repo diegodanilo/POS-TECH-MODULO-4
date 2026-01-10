@@ -1,27 +1,72 @@
-# Projeto
+# 📊 Dashboard Financeiro – Angular + Firebase
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+## 📌 Visão Geral
 
-## Development server
+Este projeto é uma aplicação **web (SPA)** desenvolvida em **Angular**, com foco em **gestão financeira pessoal**.  
+A aplicação permite que usuários autenticados visualizem, organizem e analisem suas transações financeiras por meio de um **dashboard interativo**, com indicadores, alertas e visão consolidada dos dados.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+O projeto foi estruturado seguindo **boas práticas de arquitetura**, **clean code**, **programação reativa** e **foco em performance e manutenibilidade**.
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🚀 Principais Funcionalidades
 
-## Build
+- 🔐 Autenticação de usuários (Firebase Authentication)
+- 📄 Gerenciamento de transações financeiras
+- 📊 Dashboard financeiro com:
+  - Saldo total
+  - Total de receitas
+  - Total de despesas
+  - Alertas de gastos
+- 🧭 Menu lateral com navegação
+- ⚡ Carregamento otimizado com Lazy Loading
+- 🔄 Atualização reativa dos dados
+- 📱 Interface mobile-first, preparada para uso em WebView
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 🛠️ Tecnologias Utilizadas
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Angular
+- TypeScript
+- RxJS
+- Firebase (Authentication e Firestore)
+- Ng-Zorro (UI Components)
+- Arquitetura por Features
+- ChangeDetectionStrategy.OnPush
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 📂 Estrutura do Projeto (resumida)
 
-## Further help
+```txt
+src/app
+├── core            # Autenticação, layout e guards
+├── features        # Funcionalidades (dashboard, extrato, auth)
+├── shared          # Componentes reutilizáveis
+└── app-routing     # Rotas e lazy loading
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+---
+
+## Como startar o projeto
+
+1. Install dependencies
+
+```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+   npm start
+   ```
+
+## URL do projeto local
+
+➡️ http://localhost:4202
+
+---
+
+
+
