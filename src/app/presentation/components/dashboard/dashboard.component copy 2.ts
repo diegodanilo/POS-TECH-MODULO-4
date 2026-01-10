@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map } from 'rxjs';
-import { Location } from '@angular/common';
 import { TransactionsService } from 'src/app/features/transactions/services/transactions.service';
 
 @Component({
@@ -10,12 +9,6 @@ import { TransactionsService } from 'src/app/features/transactions/services/tran
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-
-  constructor(private transactionsService: TransactionsService, private location: Location) {}
-
-  close(): void {
-    this.location.back();
-  }
 
   transactions$ = this.transactionsService.getTransactions$();
 
@@ -44,4 +37,6 @@ export class DashboardComponent {
       0)
     )
   );
+
+  constructor(private transactionsService: TransactionsService) {}
 }

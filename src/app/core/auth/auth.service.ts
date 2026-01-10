@@ -1,79 +1,76 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential, signOut, User } from '@angular/fire/auth';
-import { BehaviorSubject } from 'rxjs';
-import { Firestore } from 'firebase/firestore';
+import {
+  Auth,
+  User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from '@angular/fire/auth';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private userSubject = new BehaviorSubject<UserCredential | null>(null);
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  private userSubjectName = new BehaviorSubject<string | null>(null);
+
+  private readonly userSubject = new BehaviorSubject<User | null>(null);
+
+  readonly user$: Observable<User | null> = this.userSubject.asObservable();
+
+  readonly isAuthenticated$: Observable<boolean> = this.user$.pipe(
+    map(user => !!user),
+    distinctUntilChanged()
+  );
 
 
-  user$ = this.userSubject.asObservable();
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  userName$ = this.userSubject.asObservable();
+  readonly userName$: Observable<string | null> = this.user$.pipe(
+    map(user => user?.displayName ?? user?.email ?? null),
+    distinctUntilChanged()
+  );
 
-
-  constructor(private auth: Auth, private router: Router) {
-    auth.onAuthStateChanged((user: User | null) => {
-      if (user) {
-        const name = user.displayName ?? user.email ?? null;
-        this.userSubjectName.next(name);
-        console.log('nome', name);
-        this.isAuthenticatedSubject.next(true);
-      } else {
-        this.userSubjectName.next(null);
-        this.isAuthenticatedSubject.next(false);
-      }
+  constructor(
+    private auth: Auth,
+    private router: Router
+  ) {
+  
+    onAuthStateChanged(this.auth, (user) => {
+      this.userSubject.next(user);
     });
   }
 
-  async login(email: string, password: string): Promise<boolean> {
+  async login(email: string, password: string): Promise<void> {
     try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      this.userSubject.next(userCredential);
-      this.isAuthenticatedSubject.next(true);
-      console.log('AuthService :: login - usuário logado com sucesso');
-      return true;
+      await signInWithEmailAndPassword(this.auth, email, password);
+      console.log('AuthService :: login - sucesso');
     } catch (error) {
-      this.router.navigate(['/errorPage']);
-      console.error('AuthService :: login - falha ao logar usuário', error);
-      return false;
+      console.error('AuthService :: login - erro', error);
+      throw error;
     }
-  }
-
-  getCurrentUser(): User | null {
-    return this.auth.currentUser;
   }
 
   async logout(): Promise<void> {
     await signOut(this.auth);
-    this.userSubject.next(null);
-    this.isAuthenticatedSubject.next(false);
-    console.log('AuthService :: logout - usuário deslogado com sucesso');
     this.router.navigate(['/login']);
+    console.log('AuthService :: logout - sucesso');
   }
 
   async signUp(email: string, password: string): Promise<void> {
     try {
       await createUserWithEmailAndPassword(this.auth, email, password);
       this.router.navigate(['/login']);
-      console.log('AuthService :: signUp - usuário cadastrado com sucesso');
-    } catch (err) {
-      this.router.navigate(['/errorPage']);
-      console.error('AuthService :: signUp - falha', err);
+      console.log('AuthService :: signUp - sucesso');
+    } catch (error) {
+      console.error('AuthService :: signUp - erro', error);
+      throw error;
     }
   }
 
-  /** 🔹 Pega o UID do usuário logado */
-  getCurrentUid(): string | null {
-    return this.userSubject.value?.user?.uid ?? null;
+  get currentUser(): User | null {
+    return this.auth.currentUser;
   }
 
-  /** 🔹 Pega o email do usuário logado */
-  getCurrentEmail(): string | null {
-    return this.userSubject.value?.user?.email ?? null;
+  get currentUid(): string | null {
+    return this.auth.currentUser?.uid ?? null;
   }
 }

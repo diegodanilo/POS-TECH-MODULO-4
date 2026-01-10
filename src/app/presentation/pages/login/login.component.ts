@@ -32,17 +32,14 @@ export class LoginComponent {
 
     const { email, password } = this.form.value;
 
-    const isAuthenticatedValid = await this.authService.login(
-      email!,
-      password!
-    );
-
-    this.loading = false;
-
-    if (isAuthenticatedValid) {
+    try {
+      await this.authService.login(email!, password!);
       this.router.navigate(['/home-page']);
-    } else {
+
+    } catch (error) {
       this.errorMessage = 'E-mail ou senha inválidos';
+    } finally {
+      this.loading = false;
     }
   }
 }

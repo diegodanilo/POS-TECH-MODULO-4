@@ -50,7 +50,6 @@ registerLocaleData(localePt, 'pt-BR');
     SignupComponent,
     LateralMenuComponent,
     ForgotPasswordComponent,
-    DashboardComponent,
     TopNavbarComponent,
     NavbarComponent,
    
